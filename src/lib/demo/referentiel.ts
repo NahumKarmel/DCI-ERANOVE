@@ -449,12 +449,10 @@ export const COMPTES_HORS_FILIALE = [
 export const emailCorrespondant = (filialeCode: string): string =>
   `correspondant.${filialeCode.toLowerCase().replace(/_/g, '-')}@demo.local`;
 
-/**
- * Empreinte provisoire posée par le chargement. Aucun compte n'est connectable
- * avant l'étape 4.5, qui remplacera cette chaîne par de vrais hachages
- * Argon2id.
- */
-export const HACHAGE_PROVISOIRE = 'A_DEFINIR_ETAPE_4_5';
+/* Le mot de passe des comptes de démonstration est défini par
+   `src/lib/auth/motDePasse.ts` (`MOT_DE_PASSE_DEMONSTRATION`) et haché en
+   Argon2id par le chargement. L'empreinte provisoire de l'étape 4.4 a disparu
+   avec l'étape 4.5. */
 
 /* ------------------------------------------------------------------ */
 /*  Fils de commentaires                                               */

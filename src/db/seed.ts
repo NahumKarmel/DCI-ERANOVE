@@ -26,6 +26,7 @@ import {
   saisie,
   utilisateur,
 } from './schema';
+import { hacher, MOT_DE_PASSE_DEMONSTRATION } from '../lib/auth/motDePasse';
 import { commentaireDe, serie } from '../lib/demo/generateur';
 import {
   COMMENTAIRE_DEN_ZERO,
@@ -34,7 +35,6 @@ import {
   EXERCICE_PRECEDENT,
   FILIALES,
   FILS_COMMENTAIRES,
-  HACHAGE_PROVISOIRE,
   INDICATEURS,
   REOUVERTURES,
   emailCorrespondant,
@@ -109,15 +109,26 @@ async function principal(): Promise<void> {
     .returning({ id: indicateur.id, code: indicateur.code });
   const idIndicateur = new Map(indicateursInseres.map((i) => [i.code, i.id]));
 
-  // 5. Comptes. Le mot de passe reste à définir : aucun compte n'est
-  //    connectable avant l'étape 4.5.
+  // 5. Comptes. Tous portent le même mot de passe de démonstration, haché en
+  //    Argon2id. Il n'ouvre que des données fictives, il n'a donc pas à être
+  //    secret — et il est refusé comme NOUVEAU mot de passe par `motifDeRefus`.
+  //
+  //    Une seule empreinte est calculée puis réutilisée : Argon2id coûte
+  //    délibérément cher, et quinze hachages successifs sur deux cœurs
+  //    allongeraient le chargement sans rien apporter. Le sel étant unique, la
+  //    seule conséquence est que les quinze comptes partagent leur empreinte —
+  //    ce qu'ils font déjà en partageant leur mot de passe.
+  //
+  //    `doitChangerMotDePasse` reste à false : la démonstration doit pouvoir
+  //    incarner n'importe quel rôle sans traverser l'écran de changement.
+  const empreinteDemo = await hacher(MOT_DE_PASSE_DEMONSTRATION);
   const comptes = [
     ...FILIALES.map((f) => ({
       email: emailCorrespondant(f.code),
       prenom: f.correspondant.prenom,
       nom: f.correspondant.nom,
-      motDePasseHash: HACHAGE_PROVISOIRE,
-      doitChangerMotDePasse: true,
+      motDePasseHash: empreinteDemo,
+      doitChangerMotDePasse: false,
       role: 'CORRESPONDANT' as const,
       attributAdministrateur: f.attributAdministrateur ?? false,
       filialeId: idFiliale.get(f.code)!,
@@ -126,8 +137,8 @@ async function principal(): Promise<void> {
       email: c.email,
       prenom: c.prenom,
       nom: c.nom,
-      motDePasseHash: HACHAGE_PROVISOIRE,
-      doitChangerMotDePasse: true,
+      motDePasseHash: empreinteDemo,
+      doitChangerMotDePasse: false,
       role: c.role,
       attributAdministrateur: c.attributAdministrateur,
       filialeId: null,
