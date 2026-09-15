@@ -343,20 +343,25 @@ export interface Reouverture {
   readonly exercice: number;
   readonly mois: number;
   readonly motif: string;
+  /** Horodatage de la décision. Abidjan est à UTC+0 sans heure d'été :
+   *  l'heure locale et l'heure UTC coïncident toute l'année. */
+  readonly ouvertLe: string;
 }
 
 export const REOUVERTURES: readonly Reouverture[] = [
   {
     filiale: 'SODECI', exercice: 2026, mois: 5,
     motif:
-      'Correction demandée par la filiale : le dénominateur des TCI de mai '
-      + 'intégrait à tort deux tests reportés sur juin.',
+      'Erreur de dénominateur signalée par le correspondant : le périmètre des '
+      + 'activités planifiées avait été sous-estimé de quatre unités.',
+    ouvertLe: '2026-06-22T09:00:00Z',
   },
   {
     filiale: 'ATINKOU', exercice: 2026, mois: 3,
     motif:
-      'Première remontée de la filiale, saisie incomplète au moment de la '
-      + 'clôture. Réouverture accordée pour compléter les cartographies.',
+      'Première remontée de la filiale après intégration au dispositif. Délai '
+      + 'supplémentaire accordé pour la saisie initiale.',
+    ouvertLe: '2026-04-18T09:00:00Z',
   },
 ] as const;
 
@@ -450,3 +455,184 @@ export const emailCorrespondant = (filialeCode: string): string =>
  * Argon2id.
  */
 export const HACHAGE_PROVISOIRE = 'A_DEFINIR_ETAPE_4_5';
+
+/* ------------------------------------------------------------------ */
+/*  Fils de commentaires                                               */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Un message d'un fil de commentaires.
+ *
+ * Un message porte son auteur, son rôle et son horodatage, et n'est ni
+ * modifiable ni supprimable une fois publié : le fil est une trace d'échange
+ * dans un dispositif de contrôle interne, sa mutabilité en détruirait la valeur
+ * probante (RG-42).
+ *
+ * `auteur` désigne un rôle, pas une personne : `DIRECTEUR` résout vers le
+ * Directeur CI Groupe, `CORRESPONDANT` vers le correspondant de la filiale du
+ * fil. Le cloisonnement par filiale en découle mécaniquement (M1, RG-43,
+ * RG-45).
+ */
+export interface MessageFil {
+  readonly auteur: 'DIRECTEUR' | 'CORRESPONDANT';
+  /** Abidjan est à UTC+0 sans heure d'été : l'heure locale est l'heure UTC. */
+  readonly publieLe: string;
+  readonly corps: string;
+}
+
+/**
+ * Fil de commentaires : un fil par filiale × indicateur × exercice (M2,
+ * RG-41) — exactement la clé de `affectation`, ce qui rend le cloisonnement
+ * structurel plutôt que déclaratif.
+ *
+ * Porté à l'identique de la table `FILS` de la maquette V5. Sept fils, quatorze
+ * messages. Chacun documente un cas limite du jeu de démonstration, ce qui
+ * rend la démonstration lisible : le Directeur qui ouvre un fil y trouve
+ * l'explication du chiffre qu'il vient de voir.
+ */
+export interface FilCommentaires {
+  readonly filiale: string;
+  readonly indicateur: CodeIndicateur;
+  readonly exercice: number;
+  readonly messages: readonly MessageFil[];
+}
+
+export const FILS_COMMENTAIRES: readonly FilCommentaires[] = [
+  {
+    // Le cas des trois échanges exigé par le cahier des charges : objectif
+    // atteint en avril puis reperdu, parce que le dénominateur a grossi.
+    filiale: 'SDER', indicateur: 'AMR', exercice: 2026,
+    messages: [
+      {
+        auteur: 'DIRECTEUR', publieLe: '2026-06-12T09:14:00Z',
+        corps:
+          "Le taux repasse sous l'objectif depuis juin alors qu'il était atteint "
+          + 'en avril. Le dénominateur a-t-il augmenté à la suite du comité de mai ?',
+      },
+      {
+        auteur: 'CORRESPONDANT', publieLe: '2026-06-13T15:02:00Z',
+        corps:
+          'Confirmé : quatre recommandations supplémentaires ont été émises. Le '
+          + 'numérateur progresse mais moins vite que le périmètre. Un plan de '
+          + 'rattrapage est engagé sur le troisième trimestre.',
+      },
+      {
+        auteur: 'DIRECTEUR', publieLe: '2026-06-14T08:40:00Z',
+        corps:
+          'Bien noté. Merci de joindre le plan de rattrapage à la saisie de '
+          + 'juillet, avec les échéances par action.',
+      },
+    ],
+  },
+  {
+    // Objectif dérogatoire : l'avertissement en clair exigé par RG-24 bis
+    // existe donc aussi sous forme de trace écrite.
+    filiale: 'OMILAYE', indicateur: 'PCI', exercice: 2026,
+    messages: [
+      {
+        auteur: 'DIRECTEUR', publieLe: '2026-03-03T11:25:00Z',
+        corps:
+          "Objectif spécifique abaissé à 80 % pour l'exercice 2026, compte tenu "
+          + 'de la mise en place récente du dispositif de contrôle interne sur '
+          + 'cette entité.',
+      },
+      {
+        auteur: 'CORRESPONDANT', publieLe: '2026-03-03T16:48:00Z',
+        corps:
+          'Bien reçu. La trajectoire est bâtie sur cette cible ; un retour à '
+          + "l'objectif groupe est visé à compter de 2027.",
+      },
+    ],
+  },
+  {
+    // Absence de saisie en août, relancée avant la clôture du 10 septembre.
+    filiale: 'OMILAYE', indicateur: 'CARTO', exercice: 2026,
+    messages: [
+      {
+        auteur: 'DIRECTEUR', publieLe: '2026-09-09T07:55:00Z',
+        corps:
+          "Le mois d'août n'est pas remonté et la période se clôture demain. "
+          + 'Merci de régulariser avant le délai.',
+      },
+    ],
+  },
+  {
+    // Surperformance au-delà de 100 %, assumée sans plafonnement (RG-12).
+    filiale: 'CIE', indicateur: 'RECO_SEM', exercice: 2026,
+    messages: [
+      {
+        auteur: 'DIRECTEUR', publieLe: '2026-07-08T10:30:00Z',
+        corps:
+          "Le taux dépasse 100 %. Aucun plafonnement n'est appliqué, mais je "
+          + "souhaite m'assurer de la cohérence entre le numérateur et le "
+          + 'dénominateur retenus.',
+      },
+      {
+        auteur: 'CORRESPONDANT', publieLe: '2026-07-08T14:12:00Z',
+        corps:
+          'Des recommandations issues du séminaire 2025 ont été clôturées cette '
+          + 'année et comptabilisées au numérateur, alors que le dénominateur ne '
+          + 'porte que les recommandations 2026. Je propose de rebaser le '
+          + "dénominateur à l'ouverture de l'exercice 2027.",
+      },
+    ],
+  },
+  {
+    // Dénominateur nul : la trace écrite dit explicitement que la valeur n'est
+    // pas assimilée à 0 % (RG-13).
+    filiale: 'KEKELI', indicateur: 'TCI', exercice: 2026,
+    messages: [
+      {
+        auteur: 'CORRESPONDANT', publieLe: '2026-02-06T09:05:00Z',
+        corps:
+          "Aucun test n'était planifié en janvier ni en février, le programme "
+          + 'démarrant en mars. Les saisies sont donc à dénominateur nul.',
+      },
+      {
+        auteur: 'DIRECTEUR', publieLe: '2026-02-07T08:20:00Z',
+        corps:
+          'Traitement conforme : le taux est non calculable et exclu des '
+          + "moyennes, il n'est pas compté comme 0 %.",
+      },
+    ],
+  },
+  {
+    // Trou de mai : la courbe est interrompue, aucune valeur reportée (RG-32).
+    filiale: 'ASOKH', indicateur: 'PCI', exercice: 2026,
+    messages: [
+      {
+        auteur: 'DIRECTEUR', publieLe: '2026-06-15T09:10:00Z',
+        corps:
+          "Le mois de mai est absent pour l'ensemble de vos indicateurs. La "
+          + "courbe est interrompue et aucune valeur n'est reportée. Merci "
+          + "d'indiquer la cause.",
+      },
+      {
+        auteur: 'CORRESPONDANT', publieLe: '2026-06-16T11:33:00Z',
+        corps:
+          'Absence du référent contrôle interne sur la période de saisie. Une '
+          + 'demande de réouverture de la période sera adressée.',
+      },
+    ],
+  },
+  {
+    // Creux du deuxième trimestre.
+    filiale: 'SODECI', indicateur: 'PCI', exercice: 2026,
+    messages: [
+      {
+        auteur: 'DIRECTEUR', publieLe: '2026-06-20T16:05:00Z',
+        corps:
+          "Le creux du deuxième trimestre est marqué sur l'ensemble de vos "
+          + 'indicateurs. Est-ce imputable au dénominateur ou à un ralentissement '
+          + 'réel des travaux ?',
+      },
+      {
+        auteur: 'CORRESPONDANT', publieLe: '2026-06-21T09:47:00Z',
+        corps:
+          'Ralentissement réel, lié à la mobilisation des équipes sur le '
+          + 'déploiement du nouveau système d\'exploitation. Le redressement est '
+          + 'amorcé depuis juillet.',
+      },
+    ],
+  },
+] as const;

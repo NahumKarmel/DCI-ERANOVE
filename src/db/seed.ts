@@ -18,6 +18,7 @@ import { Pool } from 'pg';
 import * as schema from './schema';
 import {
   affectation,
+  commentaire,
   exercice,
   filiale,
   indicateur,
@@ -32,6 +33,7 @@ import {
   EXERCICE_COURANT,
   EXERCICE_PRECEDENT,
   FILIALES,
+  FILS_COMMENTAIRES,
   HACHAGE_PROVISOIRE,
   INDICATEURS,
   REOUVERTURES,
@@ -194,7 +196,7 @@ async function principal(): Promise<void> {
             ? null
             : c.denominateur === 0
               ? COMMENTAIRE_DEN_ZERO
-              : commentaireDe(f.code, code, c.mois);
+              : commentaireDe(f, ind, c.mois);
           lignesSaisie.push({
             affectationId,
             mois: c.mois,
@@ -218,8 +220,34 @@ async function principal(): Promise<void> {
       mois: r.mois,
       motif: r.motif,
       ouvertPar: idDirecteur,
+      ouvertLe: new Date(r.ouvertLe),
     })),
   );
+
+  // 9. Fils de commentaires. Un fil par filiale × indicateur × exercice (M2),
+  //    porté par `affectation` : le cloisonnement au périmètre de la filiale est
+  //    donc structurel et non déclaratif (M1, RG-43).
+  //    `auteur` désigne un rôle : CORRESPONDANT résout vers le correspondant de
+  //    la filiale du fil, jamais vers un autre.
+  const lignesCommentaire = FILS_COMMENTAIRES.flatMap((fil) => {
+    const cleFil = `${idFiliale.get(fil.filiale)}|${idIndicateur.get(fil.indicateur)}|${fil.exercice}`;
+    const affectationId = idAffectation.get(cleFil);
+    if (affectationId === undefined) {
+      throw new Error(
+        `Fil de commentaires sans affectation : ${fil.filiale} / ${fil.indicateur} / ${fil.exercice}`,
+      );
+    }
+    return fil.messages.map((m) => ({
+      affectationId,
+      auteurId:
+        m.auteur === 'DIRECTEUR'
+          ? idDirecteur
+          : idCompte.get(emailCorrespondant(fil.filiale))!,
+      corps: m.corps,
+      publieLe: new Date(m.publieLe),
+    }));
+  });
+  await db.insert(commentaire).values(lignesCommentaire);
 
   console.log(`  exercices     : 2`);
   console.log(`  filiales      : ${filialesInserees.length}`);
@@ -228,6 +256,8 @@ async function principal(): Promise<void> {
   console.log(`  affectations  : ${affectationsInserees.length}`);
   console.log(`  saisies       : ${lignesSaisie.length}`);
   console.log(`  réouvertures  : ${REOUVERTURES.length}`);
+  console.log(`  fils          : ${FILS_COMMENTAIRES.length}`);
+  console.log(`  commentaires  : ${lignesCommentaire.length}`);
   console.log('--- Chargement terminé ---');
 
   await pool.end();
