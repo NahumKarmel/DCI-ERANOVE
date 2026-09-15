@@ -21,7 +21,6 @@
 import {
   COMMENTAIRES,
   EXERCICE_COURANT,
-  type CodeIndicateur,
   type Filiale,
   type Indicateur,
   derniersMoisDe,
@@ -130,17 +129,46 @@ export function serie(
 }
 
 /**
- * Commentaire de saisie, choisi de façon déterministe parmi les trois variantes
- * de l'indicateur. Stable d'un chargement à l'autre.
+ * Commentaire de saisie.
+ *
+ * Deux cas limites portent un commentaire dédié, qui explique le chiffre au
+ * lieu de le commenter en général : l'objectif reperdu à partir de juin, et la
+ * surperformance au-delà de 100 %. Hors ces deux cas, le commentaire est choisi
+ * de façon déterministe parmi les trois variantes de l'indicateur, donc stable
+ * d'un chargement à l'autre.
+ *
+ * Porté de `commentaireSaisie()` de la maquette V5. Le cas du dénominateur nul
+ * y était traité en premier ; ici c'est le chargement qui le traite, en posant
+ * `COMMENTAIRE_DEN_ZERO` sans passer par cette fonction.
+ *
+ * RÉSERVE — comme dans la maquette, les deux cas limites ne sont pas bornés à
+ * l'exercice courant, alors que les profils qui les produisent le sont. Sur
+ * l'exercice précédent, SDER / AMR et CIE / RECO_SEM portent donc à partir de
+ * juin un commentaire qui décrit un comportement que leurs valeurs N-1 n'ont
+ * pas. Reproduit tel quel pour rester fidèle à la maquette validée ; signalé
+ * pour arbitrage.
  */
 export function commentaireDe(
-  filialeCode: string,
-  indicateurCode: CodeIndicateur,
+  filiale: Filiale,
+  indicateur: Indicateur,
   mois: number,
 ): string {
-  const variantes = COMMENTAIRES[indicateurCode];
+  if (filiale.profil.reperdu === indicateur.code && mois >= 6) {
+    return (
+      'Quatre recommandations supplémentaires ont été émises à l\'issue du '
+      + 'comité de mai. Le numérateur progresse, mais moins vite que le '
+      + 'périmètre : le taux repasse sous l\'objectif.'
+    );
+  }
+  if (filiale.profil.sur?.includes(indicateur.code) && mois >= 6) {
+    return (
+      'Des recommandations issues de l\'exercice précédent ont été clôturées et '
+      + 'intégrées au numérateur. Le taux dépasse 100 %, sans plafonnement.'
+    );
+  }
+  const variantes = COMMENTAIRES[indicateur.code];
   return variantes[
-    Math.floor(hash(filialeCode + indicateurCode + mois + 'c') * variantes.length)
+    Math.floor(hash(filiale.code + indicateur.code + mois + 'c') * variantes.length)
       % variantes.length
   ];
 }
