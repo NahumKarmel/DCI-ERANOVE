@@ -1,0 +1,1337 @@
+{
+  "id": "c3b639d9-6cde-4631-9929-c22c6bb43da7",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.affectation": {
+      "name": "affectation",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "filiale_id": {
+          "name": "filiale_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "indicateur_id": {
+          "name": "indicateur_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "exercice": {
+          "name": "exercice",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "objectif": {
+          "name": "objectif",
+          "type": "numeric(5, 4)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cree_le": {
+          "name": "cree_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "modifie_le": {
+          "name": "modifie_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "affectation_unique": {
+          "name": "affectation_unique",
+          "columns": [
+            {
+              "expression": "filiale_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "indicateur_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "exercice",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "affectation_exercice_idx": {
+          "name": "affectation_exercice_idx",
+          "columns": [
+            {
+              "expression": "exercice",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "affectation_filiale_idx": {
+          "name": "affectation_filiale_idx",
+          "columns": [
+            {
+              "expression": "filiale_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "exercice",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "affectation_filiale_id_filiale_id_fk": {
+          "name": "affectation_filiale_id_filiale_id_fk",
+          "tableFrom": "affectation",
+          "tableTo": "filiale",
+          "columnsFrom": [
+            "filiale_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "affectation_indicateur_id_indicateur_id_fk": {
+          "name": "affectation_indicateur_id_indicateur_id_fk",
+          "tableFrom": "affectation",
+          "tableTo": "indicateur",
+          "columnsFrom": [
+            "indicateur_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "affectation_exercice_exercice_annee_fk": {
+          "name": "affectation_exercice_exercice_annee_fk",
+          "tableFrom": "affectation",
+          "tableTo": "exercice",
+          "columnsFrom": [
+            "exercice"
+          ],
+          "columnsTo": [
+            "annee"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "affectation_objectif_positif": {
+          "name": "affectation_objectif_positif",
+          "value": "\"affectation\".\"objectif\" > 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.exercice": {
+      "name": "exercice",
+      "schema": "",
+      "columns": {
+        "annee": {
+          "name": "annee",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "ouvert": {
+          "name": "ouvert",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "cree_le": {
+          "name": "cree_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.filiale": {
+      "name": "filiale",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "code": {
+          "name": "code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "libelle": {
+          "name": "libelle",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entite_juridique": {
+          "name": "entite_juridique",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ordre_affichage": {
+          "name": "ordre_affichage",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "actif": {
+          "name": "actif",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "cree_le": {
+          "name": "cree_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "filiale_code_unique": {
+          "name": "filiale_code_unique",
+          "columns": [
+            {
+              "expression": "code",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.indicateur": {
+      "name": "indicateur",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "code": {
+          "name": "code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "libelle": {
+          "name": "libelle",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "libelle_court": {
+          "name": "libelle_court",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "objectif_defaut": {
+          "name": "objectif_defaut",
+          "type": "numeric(5, 4)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mode_calcul": {
+          "name": "mode_calcul",
+          "type": "mode_calcul",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'CUMUL'"
+        },
+        "ordre_affichage": {
+          "name": "ordre_affichage",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "actif": {
+          "name": "actif",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "cree_le": {
+          "name": "cree_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "indicateur_code_unique": {
+          "name": "indicateur_code_unique",
+          "columns": [
+            {
+              "expression": "code",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "indicateur_objectif_positif": {
+          "name": "indicateur_objectif_positif",
+          "value": "\"indicateur\".\"objectif_defaut\" > 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.session": {
+      "name": "session",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "utilisateur_id": {
+          "name": "utilisateur_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expire_le": {
+          "name": "expire_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "adresse_ip": {
+          "name": "adresse_ip",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "agent_utilisateur": {
+          "name": "agent_utilisateur",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cree_le": {
+          "name": "cree_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "session_utilisateur_idx": {
+          "name": "session_utilisateur_idx",
+          "columns": [
+            {
+              "expression": "utilisateur_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "session_expiration_idx": {
+          "name": "session_expiration_idx",
+          "columns": [
+            {
+              "expression": "expire_le",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "session_utilisateur_id_utilisateur_id_fk": {
+          "name": "session_utilisateur_id_utilisateur_id_fk",
+          "tableFrom": "session",
+          "tableTo": "utilisateur",
+          "columnsFrom": [
+            "utilisateur_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.utilisateur": {
+      "name": "utilisateur",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nom": {
+          "name": "nom",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "prenom": {
+          "name": "prenom",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mot_de_passe_hash": {
+          "name": "mot_de_passe_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "doit_changer_mot_de_passe": {
+          "name": "doit_changer_mot_de_passe",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "role": {
+          "name": "role",
+          "type": "role_utilisateur",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "attribut_administrateur": {
+          "name": "attribut_administrateur",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "filiale_id": {
+          "name": "filiale_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "actif": {
+          "name": "actif",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "derniere_connexion_le": {
+          "name": "derniere_connexion_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cree_le": {
+          "name": "cree_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "cree_par": {
+          "name": "cree_par",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "utilisateur_email_unique": {
+          "name": "utilisateur_email_unique",
+          "columns": [
+            {
+              "expression": "lower(\"email\")",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "utilisateur_filiale_idx": {
+          "name": "utilisateur_filiale_idx",
+          "columns": [
+            {
+              "expression": "filiale_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "utilisateur_filiale_id_filiale_id_fk": {
+          "name": "utilisateur_filiale_id_filiale_id_fk",
+          "tableFrom": "utilisateur",
+          "tableTo": "filiale",
+          "columnsFrom": [
+            "filiale_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "utilisateur_rattachement_coherent": {
+          "name": "utilisateur_rattachement_coherent",
+          "value": "(\"utilisateur\".\"role\" = 'CORRESPONDANT' AND \"utilisateur\".\"filiale_id\" IS NOT NULL)\n          OR (\"utilisateur\".\"role\" <> 'CORRESPONDANT' AND \"utilisateur\".\"filiale_id\" IS NULL)"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.commentaire": {
+      "name": "commentaire",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "affectation_id": {
+          "name": "affectation_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "auteur_id": {
+          "name": "auteur_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "corps": {
+          "name": "corps",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "publie_le": {
+          "name": "publie_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "modifie_le": {
+          "name": "modifie_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "supprime_le": {
+          "name": "supprime_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "commentaire_affectation_idx": {
+          "name": "commentaire_affectation_idx",
+          "columns": [
+            {
+              "expression": "affectation_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "publie_le",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "commentaire_affectation_id_affectation_id_fk": {
+          "name": "commentaire_affectation_id_affectation_id_fk",
+          "tableFrom": "commentaire",
+          "tableTo": "affectation",
+          "columnsFrom": [
+            "affectation_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "commentaire_auteur_id_utilisateur_id_fk": {
+          "name": "commentaire_auteur_id_utilisateur_id_fk",
+          "tableFrom": "commentaire",
+          "tableTo": "utilisateur",
+          "columnsFrom": [
+            "auteur_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.piece_jointe": {
+      "name": "piece_jointe",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "saisie_id": {
+          "name": "saisie_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nom_original": {
+          "name": "nom_original",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cle_stockage": {
+          "name": "cle_stockage",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type_mime": {
+          "name": "type_mime",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "taille_octets": {
+          "name": "taille_octets",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "televerse_par": {
+          "name": "televerse_par",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "televerse_le": {
+          "name": "televerse_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "piece_jointe_cle_unique": {
+          "name": "piece_jointe_cle_unique",
+          "columns": [
+            {
+              "expression": "cle_stockage",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "piece_jointe_saisie_idx": {
+          "name": "piece_jointe_saisie_idx",
+          "columns": [
+            {
+              "expression": "saisie_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "piece_jointe_saisie_id_saisie_id_fk": {
+          "name": "piece_jointe_saisie_id_saisie_id_fk",
+          "tableFrom": "piece_jointe",
+          "tableTo": "saisie",
+          "columnsFrom": [
+            "saisie_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "piece_jointe_televerse_par_utilisateur_id_fk": {
+          "name": "piece_jointe_televerse_par_utilisateur_id_fk",
+          "tableFrom": "piece_jointe",
+          "tableTo": "utilisateur",
+          "columnsFrom": [
+            "televerse_par"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "piece_jointe_taille_max": {
+          "name": "piece_jointe_taille_max",
+          "value": "\"piece_jointe\".\"taille_octets\" > 0 AND \"piece_jointe\".\"taille_octets\" <= 10485760"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.reouverture": {
+      "name": "reouverture",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "filiale_id": {
+          "name": "filiale_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "exercice": {
+          "name": "exercice",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mois": {
+          "name": "mois",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "motif": {
+          "name": "motif",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ouvert_par": {
+          "name": "ouvert_par",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ouvert_le": {
+          "name": "ouvert_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "referme_par": {
+          "name": "referme_par",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "referme_le": {
+          "name": "referme_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "reouverture_periode_idx": {
+          "name": "reouverture_periode_idx",
+          "columns": [
+            {
+              "expression": "filiale_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "exercice",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "mois",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "reouverture_filiale_id_filiale_id_fk": {
+          "name": "reouverture_filiale_id_filiale_id_fk",
+          "tableFrom": "reouverture",
+          "tableTo": "filiale",
+          "columnsFrom": [
+            "filiale_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "reouverture_ouvert_par_utilisateur_id_fk": {
+          "name": "reouverture_ouvert_par_utilisateur_id_fk",
+          "tableFrom": "reouverture",
+          "tableTo": "utilisateur",
+          "columnsFrom": [
+            "ouvert_par"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "reouverture_referme_par_utilisateur_id_fk": {
+          "name": "reouverture_referme_par_utilisateur_id_fk",
+          "tableFrom": "reouverture",
+          "tableTo": "utilisateur",
+          "columnsFrom": [
+            "referme_par"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "reouverture_mois_valide": {
+          "name": "reouverture_mois_valide",
+          "value": "\"reouverture\".\"mois\" BETWEEN 1 AND 12"
+        },
+        "reouverture_motif_non_vide": {
+          "name": "reouverture_motif_non_vide",
+          "value": "length(btrim(\"reouverture\".\"motif\")) > 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.saisie": {
+      "name": "saisie",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "affectation_id": {
+          "name": "affectation_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mois": {
+          "name": "mois",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "numerateur": {
+          "name": "numerateur",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "denominateur": {
+          "name": "denominateur",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "commentaire_saisie": {
+          "name": "commentaire_saisie",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "saisi_par": {
+          "name": "saisi_par",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "saisi_le": {
+          "name": "saisi_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "modifie_par": {
+          "name": "modifie_par",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "modifie_le": {
+          "name": "modifie_le",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "saisie_unique": {
+          "name": "saisie_unique",
+          "columns": [
+            {
+              "expression": "affectation_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "mois",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "saisie_affectation_idx": {
+          "name": "saisie_affectation_idx",
+          "columns": [
+            {
+              "expression": "affectation_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "saisie_affectation_id_affectation_id_fk": {
+          "name": "saisie_affectation_id_affectation_id_fk",
+          "tableFrom": "saisie",
+          "tableTo": "affectation",
+          "columnsFrom": [
+            "affectation_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "saisie_saisi_par_utilisateur_id_fk": {
+          "name": "saisie_saisi_par_utilisateur_id_fk",
+          "tableFrom": "saisie",
+          "tableTo": "utilisateur",
+          "columnsFrom": [
+            "saisi_par"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "saisie_modifie_par_utilisateur_id_fk": {
+          "name": "saisie_modifie_par_utilisateur_id_fk",
+          "tableFrom": "saisie",
+          "tableTo": "utilisateur",
+          "columnsFrom": [
+            "modifie_par"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "saisie_mois_valide": {
+          "name": "saisie_mois_valide",
+          "value": "\"saisie\".\"mois\" BETWEEN 1 AND 12"
+        },
+        "saisie_numerateur_positif": {
+          "name": "saisie_numerateur_positif",
+          "value": "\"saisie\".\"numerateur\" IS NULL OR \"saisie\".\"numerateur\" >= 0"
+        },
+        "saisie_denominateur_positif": {
+          "name": "saisie_denominateur_positif",
+          "value": "\"saisie\".\"denominateur\" IS NULL OR \"saisie\".\"denominateur\" >= 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.journal_action": {
+      "name": "journal_action",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "utilisateur_id": {
+          "name": "utilisateur_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "action": {
+          "name": "action",
+          "type": "type_action",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entite": {
+          "name": "entite",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "entite_id": {
+          "name": "entite_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "details": {
+          "name": "details",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "adresse_ip": {
+          "name": "adresse_ip",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horodatage": {
+          "name": "horodatage",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "journal_horodatage_idx": {
+          "name": "journal_horodatage_idx",
+          "columns": [
+            {
+              "expression": "horodatage",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "journal_utilisateur_idx": {
+          "name": "journal_utilisateur_idx",
+          "columns": [
+            {
+              "expression": "utilisateur_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "journal_entite_idx": {
+          "name": "journal_entite_idx",
+          "columns": [
+            {
+              "expression": "entite",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "entite_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "journal_action_utilisateur_id_utilisateur_id_fk": {
+          "name": "journal_action_utilisateur_id_utilisateur_id_fk",
+          "tableFrom": "journal_action",
+          "tableTo": "utilisateur",
+          "columnsFrom": [
+            "utilisateur_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.mode_calcul": {
+      "name": "mode_calcul",
+      "schema": "public",
+      "values": [
+        "CUMUL",
+        "FLUX"
+      ]
+    },
+    "public.role_utilisateur": {
+      "name": "role_utilisateur",
+      "schema": "public",
+      "values": [
+        "CORRESPONDANT",
+        "DIRECTEUR_CI_GROUPE",
+        "LECTEUR",
+        "ADMINISTRATEUR"
+      ]
+    },
+    "public.type_action": {
+      "name": "type_action",
+      "schema": "public",
+      "values": [
+        "CONNEXION",
+        "DECONNEXION",
+        "ECHEC_CONNEXION",
+        "SAISIE_CREEE",
+        "SAISIE_MODIFIEE",
+        "COMMENTAIRE_PUBLIE",
+        "COMMENTAIRE_MODIFIE",
+        "COMMENTAIRE_SUPPRIME",
+        "PIECE_JOINTE_AJOUTEE",
+        "PIECE_JOINTE_SUPPRIMEE",
+        "PERIODE_ROUVERTE",
+        "PERIODE_REFERMEE",
+        "OBJECTIF_MODIFIE",
+        "AFFECTATION_MODIFIEE",
+        "COMPTE_CREE",
+        "COMPTE_MODIFIE",
+        "COMPTE_DESACTIVE",
+        "MOT_DE_PASSE_REINITIALISE",
+        "EXPORT_GENERE"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
