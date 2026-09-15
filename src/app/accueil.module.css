@@ -1,0 +1,101 @@
+/* Accueil provisoire. L'orientation selon le rôle relève du lot F. */
+
+.page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.carte {
+  width: 100%;
+  max-width: 560px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 28px 32px;
+  box-shadow: 0 2px 10px rgb(22 33 58 / 8%);
+  border-top: 3px solid var(--navy);
+}
+
+.titre {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+
+.identite {
+  font-size: 0.8125rem;
+  color: var(--gris);
+  margin-bottom: 22px;
+}
+
+.tableau {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+  margin-bottom: 22px;
+}
+
+.tableau th,
+.tableau td {
+  text-align: left;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--nuage);
+  vertical-align: top;
+}
+
+.tableau th {
+  font-weight: 500;
+  color: var(--gris);
+  width: 42%;
+}
+
+.marque {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 3px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  background: var(--or);
+  color: var(--navy);
+}
+
+.avertissement {
+  padding: 10px 12px;
+  border-left: 3px solid var(--gris);
+  border-radius: 4px;
+  background: #F1F2F5;
+  font-size: 0.75rem;
+  line-height: 1.55;
+  color: #5C616B;
+  margin-bottom: 20px;
+}
+
+.deconnexion {
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 8px 14px;
+  border: 1px solid var(--nuage);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--navy);
+  cursor: pointer;
+}
+
+.deconnexion:hover {
+  border-color: var(--terre);
+  color: var(--terre);
+}
+
+.bandeau {
+  margin-top: 20px;
+  padding: 8px 10px;
+  border-radius: 4px;
+  background: #FAF1E1;
+  border-left: 3px solid var(--ambre);
+  font-size: 0.75rem;
+  color: #96601A;
+  text-align: center;
+}

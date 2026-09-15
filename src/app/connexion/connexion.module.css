@@ -1,0 +1,135 @@
+/* Écran de connexion (V1). Aucune maquette n'existe pour cet écran : la mise en
+   page reste sobre et s'en tient à la palette ERANOVE. Aucune couleur en dur. */
+
+.page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: linear-gradient(160deg, var(--navy) 0%, var(--navy-2) 100%);
+}
+
+.carte {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 32px;
+  box-shadow: 0 18px 48px rgb(0 0 0 / 28%);
+}
+
+.entete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+.logo {
+  height: 42px;
+  width: auto;
+}
+
+.titre {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--navy);
+  text-align: center;
+  line-height: 1.35;
+}
+
+.sousTitre {
+  font-size: 0.8125rem;
+  color: var(--gris);
+  text-align: center;
+}
+
+.champs {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.champ {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.etiquette {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--navy);
+}
+
+.saisie {
+  font: inherit;
+  font-size: 0.9375rem;
+  padding: 10px 12px;
+  border: 1px solid var(--nuage);
+  border-radius: 6px;
+  color: var(--navy);
+  background: #fff;
+}
+
+.saisie:focus {
+  outline: 2px solid var(--bleu);
+  outline-offset: 1px;
+  border-color: var(--bleu);
+}
+
+.bouton {
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  margin-top: 6px;
+  padding: 11px 16px;
+  border: none;
+  border-radius: 6px;
+  background: var(--vert);
+  color: var(--navy);
+  cursor: pointer;
+}
+
+.bouton:hover:not(:disabled) {
+  background: var(--vert-f);
+  color: #fff;
+}
+
+.bouton:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+/* Un échec ne dit jamais si c'est l'email ou le mot de passe qui est faux. */
+.erreur {
+  margin-bottom: 18px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--terre);
+  border-radius: 4px;
+  background: #FBEFEB;
+  font-size: 0.8125rem;
+  color: #98422A;
+}
+
+.aide {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--nuage);
+  font-size: 0.75rem;
+  line-height: 1.55;
+  color: var(--gris);
+}
+
+/* Bandeau permanent de données fictives. Piloté par MODE_DEMO. */
+.bandeau {
+  margin-top: 18px;
+  padding: 8px 10px;
+  border-radius: 4px;
+  background: #FAF1E1;
+  border-left: 3px solid var(--ambre);
+  font-size: 0.75rem;
+  color: #96601A;
+  text-align: center;
+}
