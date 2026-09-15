@@ -11,7 +11,10 @@
     "db:start": "sudo service postgresql start",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/db/migrate.ts",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "db:seed": "tsx src/db/seed.ts",
+    "test": "vitest run",
+    "recette": "npm run db:seed && vitest run"
   },
   "dependencies": {
     "dotenv": "^17.4.2",
@@ -31,6 +34,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.5.25",
     "tsx": "^4.23.13",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.7"
   }
 }
