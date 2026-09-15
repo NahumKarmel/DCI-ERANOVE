@@ -1,0 +1,599 @@
+/* V2 — Saisie mensuelle. Palette ERANOVE uniquement, aucune couleur en dur
+   hors teintes claires dérivées, qui n'existent pas dans palette.css. */
+
+.page {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 24px 20px 48px;
+}
+
+.entete {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--navy);
+}
+
+.titre {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.sousTitre {
+  font-size: 0.8125rem;
+  color: var(--gris);
+  margin-top: 3px;
+}
+
+.retour {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 7px 13px;
+  border: 1px solid var(--nuage);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--navy);
+  text-decoration: none;
+}
+
+.retour:hover {
+  border-color: var(--bleu);
+  color: var(--bleu);
+}
+
+.bandeau {
+  margin-top: 14px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background: #FAF1E1;
+  border-left: 3px solid var(--ambre);
+  font-size: 0.75rem;
+  color: #96601A;
+  text-align: center;
+}
+
+/* ---------- Barre de contexte ---------- */
+
+.barre {
+  margin-top: 16px;
+  padding: 16px 18px;
+  background: #fff;
+  border: 1px solid #E4E7EC;
+  border-radius: 10px;
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.blocMois { min-width: 260px; }
+.blocEtat { flex: 1; min-width: 280px; }
+.blocCompletude { min-width: 190px; }
+
+.etiquetteBloc {
+  display: block;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 700;
+  color: var(--gris);
+  margin-bottom: 7px;
+}
+
+.moisListe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.moisLien,
+.moisActif,
+.moisInactif {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 5px;
+  border: 1px solid var(--nuage);
+  text-decoration: none;
+}
+
+.moisLien {
+  background: #fff;
+  color: var(--navy);
+}
+
+.moisLien:hover {
+  border-color: var(--bleu);
+  color: var(--bleu);
+}
+
+.moisActif {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+  font-weight: 700;
+}
+
+/* Un mois non ouvert n'est pas cliquable : la saisie anticipée n'existe pas. */
+.moisInactif {
+  background: #F4F6F9;
+  color: var(--gris);
+  border-style: dashed;
+  cursor: not-allowed;
+}
+
+.etatOuverte,
+.etatClose,
+.etatNonOuverte,
+.etatRouverte {
+  border-radius: 7px;
+  padding: 9px 13px;
+  font-size: 0.78125rem;
+  line-height: 1.5;
+}
+
+.etatOuverte {
+  background: #EFF6E3;
+  border: 1px solid #CBE3A6;
+  color: var(--vert-f);
+}
+
+.etatClose {
+  background: #F1F2F5;
+  border: 1px solid var(--nuage);
+  color: #5B6473;
+}
+
+.etatNonOuverte {
+  background: #F1F2F5;
+  border: 1px dashed var(--gris);
+  color: #5B6473;
+}
+
+/* RG-31 ter — la période rouverte porte un rendu DISTINCT des deux autres.
+   Le violet lui est réservé dans toute l'application. */
+.etatRouverte {
+  background: #F1EAF5;
+  border: 1px solid var(--violet);
+  border-left-width: 4px;
+  color: #5A2F6E;
+}
+
+.motif {
+  display: block;
+  margin-top: 5px;
+  font-style: italic;
+  color: #6B3A82;
+}
+
+.jauge {
+  height: 8px;
+  background: #EDEFF2;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.jaugePleine,
+.jaugePartielle {
+  height: 100%;
+  transition: width 0.25s;
+}
+
+.jaugePleine { background: var(--vert); }
+.jaugePartielle { background: var(--bleu); }
+
+.compte {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.avertissementHorloge {
+  margin-top: 14px;
+  padding: 9px 13px;
+  border-radius: 6px;
+  background: #EAF1F8;
+  border-left: 3px solid var(--bleu);
+  font-size: 0.75rem;
+  color: #1B547F;
+}
+
+.erreur,
+.succes {
+  margin-top: 14px;
+  padding: 10px 13px;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+}
+
+.erreur {
+  background: #FBEFEB;
+  border-left: 3px solid var(--terre);
+  color: #98422A;
+}
+
+.succes {
+  background: #EFF6E3;
+  border-left: 3px solid var(--vert);
+  color: var(--vert-f);
+}
+
+/* ---------- Cartes indicateurs ---------- */
+
+.cartes {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.carte,
+.carteDerogatoire {
+  background: #fff;
+  border: 1px solid #E4E7EC;
+  border-radius: 10px;
+  padding: 15px 18px 12px;
+}
+
+/* Signal 1 de RG-24 bis — marquage visuel de l'objectif dérogatoire. */
+.carteDerogatoire {
+  border-left: 4px solid var(--ambre);
+  background: linear-gradient(to right, #FDF8EF 0 6px, #fff 6px);
+}
+
+.carteEntete {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.numero {
+  width: 25px;
+  height: 25px;
+  border-radius: 5px;
+  background: var(--navy);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.carteTitre { flex: 1; min-width: 240px; }
+
+.libelle {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--navy);
+}
+
+.cumul {
+  display: inline-block;
+  margin-top: 5px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: #F1F2F5;
+  border: 1px solid #E2E4E8;
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: #5B6473;
+}
+
+.badgeVert,
+.badgeBleu,
+.badgeAmbre,
+.badgeNeutre {
+  padding: 4px 10px;
+  border-radius: 5px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.badgeVert  { background: #EFF6E3; color: var(--vert-f); border: 1px solid #CBE3A6; }
+.badgeBleu  { background: #EAF1F8; color: #1B547F;       border: 1px solid #B4D3EC; }
+.badgeAmbre { background: #FAF1E1; color: #96601A;       border: 1px solid #F0D6A4; }
+.badgeNeutre{ background: #F1F2F5; color: var(--gris);   border: 1px solid #E2E4E8; }
+
+/* Signal 3 de RG-24 bis — avertissement en clair, pas un simple libellé. */
+.avertissementDerogation {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: #FAF1E1;
+  border: 1px solid #F0D6A4;
+  border-left: 3px solid var(--ambre);
+  font-size: 0.75rem;
+  line-height: 1.55;
+  color: #7A4E14;
+}
+
+.ligneChamps {
+  margin-top: 14px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.champ {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.etiquetteChamp {
+  font-size: 0.6875rem;
+  color: var(--gris);
+  font-weight: 500;
+}
+
+.saisieNombre {
+  width: 110px;
+  font-size: 0.9375rem;
+  padding: 8px 10px;
+  border: 1px solid var(--nuage);
+  border-radius: 6px;
+  color: var(--navy);
+  background: #fff;
+}
+
+.saisieNombre:disabled {
+  background: #F4F6F9;
+  color: #5B6473;
+}
+
+.saisieNombre:focus {
+  outline: 2px solid var(--bleu);
+  outline-offset: 1px;
+}
+
+.barreOblique {
+  font-size: 1.25rem;
+  color: var(--nuage);
+  padding-bottom: 8px;
+}
+
+.metriques {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  gap: 26px;
+  padding-bottom: 2px;
+}
+
+.metrique {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 0.8125rem;
+  color: var(--navy);
+}
+
+.valeurTaux {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+/* Signal 2 de RG-24 bis — rappel de l'objectif groupe à PROXIMITÉ immédiate. */
+.rappelObjectifGroupe {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #96601A;
+}
+
+.noteNonCalculable,
+.noteSurperformance,
+.noteBrouillon {
+  margin-top: 11px;
+  padding: 9px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  line-height: 1.55;
+}
+
+.noteNonCalculable {
+  background: #F1F2F5;
+  border: 1px solid var(--nuage);
+  color: #5B6473;
+}
+
+.noteSurperformance {
+  background: #EAF1F8;
+  border: 1px solid #B4D3EC;
+  color: #1B547F;
+}
+
+/* Le brouillon est en ambre, comme partout dans l'application. */
+.noteBrouillon {
+  background: #FAF1E1;
+  border: 1px solid #F0D6A4;
+  color: #96601A;
+  margin-top: 6px;
+}
+
+.blocCommentaire {
+  margin-top: 13px;
+  padding-top: 12px;
+  border-top: 1px solid #EDEFF2;
+}
+
+.marqueObligatoire {
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: #FAF1E1;
+  border: 1px solid #F0D6A4;
+  color: #96601A;
+  font-size: 0.625rem;
+  font-weight: 700;
+}
+
+.zoneTexte,
+.zoneTexteAlerte {
+  width: 100%;
+  margin-top: 6px;
+  border-radius: 7px;
+  padding: 9px 11px;
+  font-size: 0.78125rem;
+  font-family: inherit;
+  color: var(--navy);
+  resize: vertical;
+  background: #fff;
+}
+
+.zoneTexte { border: 1px solid var(--nuage); }
+.zoneTexteAlerte { border: 1px solid var(--ambre); }
+
+.zoneTexte:disabled,
+.zoneTexteAlerte:disabled {
+  background: #F4F6F9;
+  color: #5B6473;
+}
+
+/* ---------- Justificatifs ---------- */
+
+.zoneJustificatif {
+  margin-top: 10px;
+}
+
+.bascule {
+  background: none;
+  border: none;
+  color: var(--bleu);
+  font-size: 0.78125rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+}
+
+.compteur {
+  margin-left: 6px;
+  padding: 0 6px;
+  border-radius: 9px;
+  background: var(--bleu);
+  color: #fff;
+  font-size: 0.625rem;
+}
+
+.deposeJustificatif {
+  margin-top: 9px;
+  padding: 13px;
+  border: 1px dashed var(--nuage);
+  border-radius: 7px;
+  background: #FAFBFC;
+}
+
+.listeJustificatifs {
+  list-style: none;
+  margin-bottom: 10px;
+  font-size: 0.75rem;
+  color: var(--navy);
+}
+
+.listeJustificatifs li {
+  padding: 4px 0;
+  border-bottom: 1px solid #EDEFF2;
+}
+
+.taille {
+  margin-left: 8px;
+  color: var(--gris);
+  font-size: 0.6875rem;
+}
+
+.formulaireFichier {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.champFichier {
+  font-size: 0.75rem;
+  color: var(--navy);
+}
+
+.noteDiscrete {
+  font-size: 0.6875rem;
+  color: var(--gris);
+  line-height: 1.55;
+  margin-top: 7px;
+}
+
+.erreurEnLigne,
+.succesEnLigne {
+  margin-top: 8px;
+  font-size: 0.75rem;
+}
+
+.erreurEnLigne { color: #98422A; }
+.succesEnLigne { color: var(--vert-f); }
+
+/* ---------- Barre d'action ---------- */
+
+.barreAction {
+  margin-top: 18px;
+  padding: 15px 18px;
+  background: #fff;
+  border: 1px solid #E4E7EC;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.barreAction .noteDiscrete {
+  flex: 1;
+  min-width: 240px;
+  margin-top: 0;
+  font-size: 0.75rem;
+}
+
+.boutonPrincipal {
+  font: inherit;
+  font-size: 0.84375rem;
+  font-weight: 700;
+  padding: 11px 24px;
+  border: none;
+  border-radius: 7px;
+  background: var(--navy);
+  color: #fff;
+  cursor: pointer;
+}
+
+.boutonPrincipal:hover:not(:disabled) { background: var(--navy-2); }
+
+.boutonPrincipal:disabled {
+  background: var(--nuage);
+  color: #fff;
+  cursor: not-allowed;
+}
+
+.boutonSecondaire {
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 7px 14px;
+  border: 1px solid var(--bleu);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--bleu);
+  cursor: pointer;
+}
+
+.boutonSecondaire:disabled {
+  border-color: var(--nuage);
+  color: var(--gris);
+  cursor: progress;
+}

@@ -1,0 +1,71 @@
+# =============================================================================
+#  Recette automatique — verrou de non-régression des six repères chiffrés.
+#
+#  Rend le verrou MÉCANIQUE et non plus déclaratif : sans ce workflow, la
+#  recette ne tourne que sur le poste du développeur et une régression passe
+#  la fusion sans être vue.
+#
+#  PostgreSQL 16 NU, image officielle, aucune extension propriétaire : la
+#  recette doit passer sur une base que `pg_dump` suffit à déménager.
+# =============================================================================
+name: Recette
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Une seule exécution par branche : le quota est limité.
+concurrency:
+  group: recette-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  recette:
+    name: Six repères chiffrés
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: dci
+          POSTGRES_PASSWORD: dci
+          POSTGRES_DB: dci_dev
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://dci:dci@localhost:5432/dci_dev
+      # Aucun secret n'est nécessaire : le jeu de démonstration est fictif et
+      # déterministe, et aucun compte n'est connectable depuis la CI.
+      APP_FUSEAU: Africa/Abidjan
+      APP_EXERCICE_COURANT: '2026'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Appliquer les migrations
+        run: npm run db:migrate
+
+      - name: Vérification statique
+        run: npm run lint
+
+      - name: Recette — chargement puis les 12 tests
+        run: npm run recette
+
+      - name: Build de production
+        run: npm run build

@@ -152,8 +152,15 @@ touchant au modèle, au générateur ou aux fonctions de calcul.
 | Périodes closes incomplètes, 2026 | **8** couples filiale × mois |
 | Filiales sans retard, 2026 | **7 sur 12** |
 | Score SDER, août 2026 | **50,3 %** |
-| Moyenne `AMR`, août 2026 | **72,3 %** sur 11 filiales calculables |
-| Filiales atteignant l'objectif `AMR` en août | **3 sur 11** |
+| Moyenne `AMR`, août 2026 | **72,4 %** sur 11 filiales calculables |
+| Filiales atteignant l'objectif `AMR` en août | **4 sur 11** |
+
+> **Provenance des deux derniers repères (arbitrage T8.b).** Ils valaient 72,3 % et
+> 3 sur 11 dans le CDC v1.5. Ces valeurs venaient de la maquette V4, qui affichait un
+> taux brut sans passer par un modèle de données. L'application ne stockant jamais de
+> taux, la seule valeur possible est `numerateur / denominateur` : GS2E — SDCI tombe
+> alors exactement sur 8/10, soit l'objectif `AMR`, et bascule du côté des filiales qui
+> l'atteignent. **Ne pas rouvrir cet arbitrage sur la base du CDC v1.5.**
 
 Ces contrôles sont implémentés en tests automatisés dès l'étape 4.4 et rejoués à
 chaque modification.
