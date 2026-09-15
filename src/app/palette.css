@@ -1,0 +1,21 @@
+/* =============================================================================
+   Palette ERANOVE — source unique de vérité chromatique.
+   Aucune couleur en dur dans un composant.
+
+   Règle : une cellule se colore selon le RAPPORT DU TAUX A SON OBJECTIF,
+   jamais selon le taux brut.
+   ============================================================================= */
+
+:root {
+  --navy:    #16213A;  /* en-têtes, texte principal                */
+  --navy-2:  #243456;  /* dégradé d'en-tête                        */
+  --vert:    #8DB93F;  /* accent principal, objectif atteint       */
+  --vert-f:  #4F7B14;  /* texte sur fond vert                      */
+  --bleu:    #2E6DA4;  /* information, surperformance, mise en avant */
+  --ambre:   #D9902B;  /* vigilance, brouillon, objectif dérogatoire */
+  --terre:   #C15A38;  /* écart critique, absence de saisie        */
+  --or:      #E8B93C;  /* distinction, attribut administrateur     */
+  --violet:  #6B3A82;  /* période rouverte                         */
+  --gris:    #8A909B;  /* non calculable, non saisi                */
+  --nuage:   #D3D8E0;  /* courbes de second plan                   */
+}
